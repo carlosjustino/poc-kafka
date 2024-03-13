@@ -1,0 +1,56 @@
+openapi: 3.0.1
+info:
+  title: Justino API para envio de mensagem para o Kafka
+  description: POC API para envio de mensagem para o Kafka
+  version: 0.0.1
+servers:
+  - url: http://localhost:8081
+    description: Justino Server
+tags:
+  - name: Kafka
+    description: API para serviços internos do Kafka
+paths:
+  /v1/{type}/send:
+    post:
+      tags:
+        - Kafka
+      summary: Envia mensagem.
+      operationId: sendMessageKafka
+      parameters:
+        - name: type
+          in: path
+          description: Identificador do tipo de envio.
+          required: true
+          schema:
+            type: string
+            enum: [sync, async]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        "204":
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  schemas:
+    Message:
+      required:
+        - message
+      type: object
+      properties:
+        id:
+          type: string
+          description: UUID.
+          example: "4e7a2ee9-d044-41dc-8516-43948224d5c4"
+        message:
+          type: string
+          description: Valor do dado.
+          example: XPTO001
+        timestamp:
+          type: string
+      description: Mensagem a ser enviada para o kafka.
